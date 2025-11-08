@@ -4,162 +4,169 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Content Locked</title>
-    <!-- 1. Load Tailwind CSS -->
+    <!-- Importing Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 2. Load Inter font -->
+    <!-- Importing Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        /* 3. Apply Inter font as the default */
         body {
             font-family: 'Inter', sans-serif;
         }
+        /* Custom styles for the countdown blocks */
+        .countdown-box {
+            @apply flex flex-col items-center justify-center p-4 sm:p-6;
+        }
+        .countdown-value {
+            @apply text-4xl sm:text-6xl lg:text-7xl font-bold text-yellow-400;
+        }
+        .countdown-label {
+            @apply text-sm sm:text-base font-medium text-gray-300 uppercase tracking-wider mt-1;
+        }
     </style>
 </head>
-<body class="bg-gray-900 flex items-center justify-center min-h-screen text-white p-4">
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
 
-    <main class="bg-white text-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md">
-
-        <!-- ===== LOCKED STATE ===== -->
-        <!-- This section is visible by default and will be hidden when the timer runs out -->
-        <div id="locked-container">
-            <h1 class="text-3xl font-bold text-center text-indigo-600">
-                Content Locked
-            </h1>
-            <p class="text-center text-gray-600 mt-3 mb-6">
-                This link will automatically unlock in:
-            </p>
-
-            <!-- Countdown Timer -->
-            <div id="countdown" class="flex justify-center gap-4 text-center">
-                <!-- Days -->
-                <div>
-                    <span id="days" class="text-5xl font-black text-gray-800">00</span>
-                    <span class="block text-xs font-medium text-gray-500 uppercase tracking-widest">Days</span>
-                </div>
-                <span class="text-5xl font-black text-gray-300">:</span>
-                <!-- Hours -->
-                <div>
-                    <span id="hours" class="text-5xl font-black text-gray-800">00</span>
-                    <span class="block text-xs font-medium text-gray-500 uppercase tracking-widest">Hours</span>
-                </div>
-                <span class="text-5xl font-black text-gray-300">:</span>
-                <!-- Minutes -->
-                <div>
-                    <span id="minutes" class="text-5xl font-black text-gray-800">00</span>
-                    <span class="block text-xs font-medium text-gray-500 uppercase tracking-widest">Mins</span>
-                </div>
-                <span class="text-5xl font-black text-gray-300">:</span>
-                <!-- Seconds -->
-                <div>
-                    <span id="seconds" class="text-5xl font-black text-gray-800">00</span>
-                    <span class="block text-xs font-medium text-gray-500 uppercase tracking-widest">Secs</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== UNLOCKED STATE ===== -->
-        <!-- This section is hidden by default and becomes visible when the timer finishes -->
-        <div id="unlocked-container" class="hidden text-center">
-            <h1 class="text-3xl font-bold text-green-600">
-                Content Unlocked!
-            </h1>
-            <p class="text-center text-gray-600 mt-3 mb-8">
-                The link to the folder is now available.
-            </p>
+    <div class="w-full max-w-3xl mx-auto">
+        <div class="bg-gray-800 rounded-2xl shadow-2xl p-8 sm:p-12 text-center transition-all duration-300" id="main-card">
             
-            <!-- The Link Button -->
-            <a id="locked-link"
-               href="#" 
-               target="_blank" 
-               rel="noopener noreferrer"
-               class="block w-full bg-green-600 text-white font-bold py-4 px-6 rounded-lg text-lg hover:bg-green-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                Go to Google Drive Folder
-            </a>
-        </div>
+            <!-- Locked State -->
+            <div id="locked-state">
+                <!-- Lock Icon -->
+                <div class="w-16 h-16 bg-yellow-400 text-gray-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                
+                <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">Content Locked</h1>
+                <p class="text-lg text-gray-300 mb-8">This resource will be available after the timer ends.</p>
 
-    </main>
+                <!-- Countdown Timer -->
+                <div class="grid grid-cols-4 gap-2 sm:gap-4 max-w-md mx-auto mb-8">
+                    <div class="countdown-box bg-gray-700 rounded-lg">
+                        <span id="days" class="countdown-value">00</span>
+                        <span class="countdown-label">Days</span>
+                    </div>
+                    <div class="countdown-box bg-gray-700 rounded-lg">
+                        <span id="hours" class="countdown-value">00</span>
+                        <span class="countdown-label">Hours</span>
+                    </div>
+                    <div class="countdown-box bg-gray-700 rounded-lg">
+                        <span id="minutes" class="countdown-value">00</span>
+                        <span class="countdown-label">Minutes</span>
+                    </div>
+                    <div class="countdown-box bg-gray-700 rounded-lg">
+                        <span id="seconds" class="countdown-value">00</span>
+                        <span class="countdown-label">Seconds</span>
+                    </div>
+                </div>
+
+                <!-- Disabled Button -->
+                <button disabled class="w-full max-w-sm mx-auto bg-gray-600 text-gray-400 font-bold py-3 px-6 rounded-lg cursor-not-allowed flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                    </svg>
+                    Waiting for Unlock
+                </button>
+            </div>
+
+            <!-- Unlocked State (Hidden by default) -->
+            <div id="unlocked-state" class="hidden">
+                <!-- Unlock Icon -->
+                <div class="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                    </svg>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">Content Unlocked!</h1>
+                <p class="text-lg text-gray-300 mb-8">The resource is now available. Click the button below to access it.</p>
+
+                <!-- Active Button -->
+                <a id="unlock-link" href="#" target="_blank" class="w-full max-w-sm mx-auto bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 flex items-center justify-center shadow-lg transform hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                    </svg>
+                    Access Link
+                </a>
+            </div>
+
+        </div>
+    </div>
 
     <script>
         // --- CONFIGURATION ---
-
-        // 1. Set the Google Drive Link
-        // Replace the placeholder link with your actual Google Drive folder link.
-        const GOOGLE_DRIVE_LINK = 'https://drive.google.com/drive/folders/1-pmmEetn5XkiJqm-LkhOJezFom7slGK1';
-
-        // 2. Set the unlock date and time:
-        // The format is 'YYYY-MM-DDTHH:MM:SS' (ISO 8601).
-        // This format uses the user's local timezone.
-        // Example: '2025-11-08T18:15:00' corresponds to November 8, 2025, at 6:15:00 PM.
-        const UNLOCK_TIME_STRING = '2025-11-08T18:15:00';
-
+        // Set your target unlock date and time (YYYY-MM-DDTHH:MM:SS)
+        // This will be interpreted in the user's local timezone.
+        const unlockDateString = "2025-11-08T19:15:00";
+        const lockedLink = "https://drive.google.com/drive/folders/1-pmmEetn5XkiJqm-LkhOJezFom7slGK1";
         // --- END CONFIGURATION ---
 
-        // Get the target unlock time as a timestamp (milliseconds since epoch).
-        const unlockTimestamp = new Date(UNLOCK_TIME_STRING).getTime();
-
-        // Get references to all the HTML elements needed for dynamic updates.
-        const lockedContainer = document.getElementById('locked-container');
-        const unlockedContainer = document.getElementById('unlocked-container');
-        const lockedLink = document.getElementById('locked-link');
-
+        // Get DOM elements
         const daysEl = document.getElementById('days');
         const hoursEl = document.getElementById('hours');
         const minutesEl = document.getElementById('minutes');
         const secondsEl = document.getElementById('seconds');
+        
+        const lockedStateEl = document.getElementById('locked-state');
+        const unlockedStateEl = document.getElementById('unlocked-state');
+        const unlockLinkEl = document.getElementById('unlock-link');
+        const mainCardEl = document.getElementById('main-card');
 
-        // Set the link's href attribute immediately on page load.
-        lockedLink.href = GOOGLE_DRIVE_LINK;
+        // Set the link href
+        unlockLinkEl.href = lockedLink;
 
-        // This function runs every second to update the countdown timer.
+        // Set the target time
+        const unlockTime = new Date(unlockDateString).getTime();
+
+        // Update the countdown every 1 second
+        const countdownInterval = setInterval(updateCountdown, 1000);
+
+        // Run once immediately to avoid 1-second delay
+        updateCountdown();
+
         function updateCountdown() {
-            // Get the current time as a timestamp.
             const now = new Date().getTime();
+            const distance = unlockTime - now;
 
-            // Calculate the remaining time until the unlock timestamp.
-            const distance = unlockTimestamp - now;
-
-            // --- Time has run out ---
             if (distance < 0) {
-                // Stop the recurring timer.
+                // Time is up!
                 clearInterval(countdownInterval);
-                
-                // Hide the locked state container.
-                lockedContainer.classList.add('hidden');
-                
-                // Show the unlocked state container.
-                unlockedContainer.classList.remove('hidden');
-                
-                return; // Exit the function since the countdown is finished.
+                showUnlockedState();
+                return;
             }
 
-            // --- Time is still counting down ---
-            
-            // Calculate the remaining days, hours, minutes, and seconds.
+            // Calculate time
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // A helper function to add a leading zero if a number is less than 10.
-            const pad = (num) => String(num).padStart(2, '0');
-
-            // Update the HTML elements with the calculated time values.
-            daysEl.textContent = pad(days);
-            hoursEl.textContent = pad(hours);
-            minutesEl.textContent = pad(minutes);
-            secondsEl.textContent = pad(seconds);
+            // Display results (with leading zeros)
+            daysEl.textContent = String(days).padStart(2, '0');
+            hoursEl.textContent = String(hours).padStart(2, '0');
+            minutesEl.textContent = String(minutes).padStart(2, '0');
+            secondsEl.textContent = String(seconds).padStart(2, '0');
         }
 
-        // Run the `updateCountdown` function every 1000 milliseconds (1 second).
-        const countdownInterval = setInterval(updateCountdown, 1000);
+        function showUnlockedState() {
+            // Hide locked state
+            lockedStateEl.classList.add('hidden');
+            
+            // Show unlocked state
+            unlockedStateEl.classList.remove('hidden');
 
-        // Run the function once immediately on page load.
-        // This prevents the timer from showing "00:00:00:00" for the first second
-        // before the interval starts.
-        updateCountdown();
-
+            // Change card color to green
+            mainCardEl.classList.remove('bg-gray-800');
+            mainCardEl.classList.add('bg-gray-800'); // Keep it consistent, or change if you want
+            
+            // Optional: You could add a subtle animation or color change
+            // e.g., mainCardEl.classList.add('border-2', 'border-green-500');
+        }
     </script>
+
 </body>
 </html>
