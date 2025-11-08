@@ -3,169 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Locked</title>
-    <!-- Importing Tailwind CSS -->
+    <title>Content Unlocking Soon</title>
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Importing Inter font -->
+    <!-- Load Inter font from Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Use Inter as the default font */
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Custom styles for the countdown blocks */
-        .countdown-box {
-            @apply flex flex-col items-center justify-center p-4 sm:p-6;
+        /* Custom styles for the countdown numbers */
+        .timer-number {
+            font-weight: 800; /* Extra-bold for numbers */
+            line-height: 1;
         }
-        .countdown-value {
-            @apply text-4xl sm:text-6xl lg:text-7xl font-bold text-yellow-400;
-        }
-        .countdown-label {
-            @apply text-sm sm:text-base font-medium text-gray-300 uppercase tracking-wider mt-1;
+        .timer-label {
+            font-weight: 500; /* Medium for labels */
+            font-size: 0.75rem; /* 12px */
+            letter-spacing: 0.05em; /*Slightly wider tracking */
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white min-h-screen flex items-center justify-center p-4">
 
-    <div class="w-full max-w-3xl mx-auto">
-        <div class="bg-gray-800 rounded-2xl shadow-2xl p-8 sm:p-12 text-center transition-all duration-300" id="main-card">
+    <!-- Main Content Card -->
+    <div id="locker-card" class="w-full max-w-lg bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-6 sm:p-10 text-center transition-all duration-500">
+
+        <!-- This section shows when the content is LOCKED -->
+        <div id="locked-state">
+            <div class="mb-6">
+                <!-- Padlock Icon -->
+                <svg class="w-12 h-12 mx-auto text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 00-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+            </div>
             
-            <!-- Locked State -->
-            <div id="locked-state">
-                <!-- Lock Icon -->
-                <div class="w-16 h-16 bg-yellow-400 text-gray-900 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                </div>
-                
-                <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">Content Locked</h1>
-                <p class="text-lg text-gray-300 mb-8">This resource will be available after the timer ends.</p>
+            <h1 class="text-2xl sm:text-3xl font-bold mb-3">Content Locked</h1>
+            <p class="text-gray-300 text-lg mb-8">This link will be available in:</p>
 
-                <!-- Countdown Timer -->
-                <div class="grid grid-cols-4 gap-2 sm:gap-4 max-w-md mx-auto mb-8">
-                    <div class="countdown-box bg-gray-700 rounded-lg">
-                        <span id="days" class="countdown-value">00</span>
-                        <span class="countdown-label">Days</span>
-                    </div>
-                    <div class="countdown-box bg-gray-700 rounded-lg">
-                        <span id="hours" class="countdown-value">00</span>
-                        <span class="countdown-label">Hours</span>
-                    </div>
-                    <div class="countdown-box bg-gray-700 rounded-lg">
-                        <span id="minutes" class="countdown-value">00</span>
-                        <span class="countdown-label">Minutes</span>
-                    </div>
-                    <div class="countdown-box bg-gray-700 rounded-lg">
-                        <span id="seconds" class="countdown-value">00</span>
-                        <span class="countdown-label">Seconds</span>
-                    </div>
+            <!-- Countdown Timer -->
+            <div id="countdown-timer" class_="grid grid-cols-4 gap-2 sm:gap-4 text-white">
+                <div class="bg-white/10 rounded-lg p-4">
+                    <div id="days" class="timer-number text-4xl sm:text-6xl">00</div>
+                    <div class="timer-label text-gray-400">DAYS</div>
                 </div>
-
-                <!-- Disabled Button -->
-                <button disabled class="w-full max-w-sm mx-auto bg-gray-600 text-gray-400 font-bold py-3 px-6 rounded-lg cursor-not-allowed flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-                    </svg>
-                    Waiting for Unlock
-                </button>
+                <div class="bg-white/10 rounded-lg p-4">
+                    <div id="hours" class="timer-number text-4xl sm:text-6xl">00</div>
+                    <div class="timer-label text-gray-400">HOURS</div>
+                </div>
+                <div class="bg-white/10 rounded-lg p-4">
+                    <div id="minutes" class="timer-number text-4xl sm:text-6xl">00</div>
+                    <div class="timer-label text-gray-400">MINUTES</div>
+                </div>
+                <div class="bg-white/10 rounded-lg p-4">
+                    <div id="seconds" class="timer-number text-4xl sm:text-6xl">00</div>
+                    <div class="timer-label text-gray-400">SECONDS</div>
+                </div>
             </div>
-
-            <!-- Unlocked State (Hidden by default) -->
-            <div id="unlocked-state" class="hidden">
-                <!-- Unlock Icon -->
-                <div class="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
-                    </svg>
-                </div>
-
-                <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">Content Unlocked!</h1>
-                <p class="text-lg text-gray-300 mb-8">The resource is now available. Click the button below to access it.</p>
-
-                <!-- Active Button -->
-                <a id="unlock-link" href="#" target="_blank" class="w-full max-w-sm mx-auto bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 flex items-center justify-center shadow-lg transform hover:scale-105">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                    </svg>
-                    Access Link
-                </a>
-            </div>
-
         </div>
+
+        <!-- This section shows when the content is UNLOCKED (hidden by default) -->
+        <div id="unlocked-state" class="hidden">
+            <div class="mb-6">
+                <!-- Unlocked Icon -->
+                <svg class="w-12 h-12 mx-auto text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 00-9 0v3.75m.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            
+            <h1 class="text-2xl sm:text-3xl font-bold mb-3">Content Unlocked!</h1>
+            <p class="text-gray-300 text-lg mb-8">The link is now available. Click below to access it.</p>
+
+            <!-- Access Button -->
+            <a id="access-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-lg text-lg transition-all duration-300 shadow-lg hover:shadow-blue-500/50">
+                Access File
+            </a>
+        </div>
+
     </div>
 
     <script>
         // --- CONFIGURATION ---
-        // Set your target unlock date and time (YYYY-MM-DDTHH:MM:SS)
-        // This will be interpreted in the user's local timezone.
-        const unlockDateString = "2025-11-08T19:15:00";
-        const lockedLink = "https://drive.google.com/drive/folders/1-pmmEetn5XkiJqm-LkhOJezFom7slGK1";
-        // --- END CONFIGURATION ---
-
-        // Get DOM elements
+        // Set the unlock date and time (YYYY-MM-DDTHH:MM:SS)
+        // NOTE: This uses the user's local browser time.
+        const unlockDateString = "2025-11-09T09:00:00";
+        const googleDriveLink = "https://drive.google.com/drive/folders/1OPr6FPwo_mp_Ix5yLrq2FIGUALQixcnT";
+        
+        // --- Get HTML Elements ---
+        const lockedState = document.getElementById('locked-state');
+        const unlockedState = document.getElementById('unlocked-state');
+        const accessLink = document.getElementById('access-link');
+        
         const daysEl = document.getElementById('days');
         const hoursEl = document.getElementById('hours');
         const minutesEl = document.getElementById('minutes');
         const secondsEl = document.getElementById('seconds');
         
-        const lockedStateEl = document.getElementById('locked-state');
-        const unlockedStateEl = document.getElementById('unlocked-state');
-        const unlockLinkEl = document.getElementById('unlock-link');
-        const mainCardEl = document.getElementById('main-card');
+        // --- Set the link URL ---
+        accessLink.href = googleDriveLink;
 
-        // Set the link href
-        unlockLinkEl.href = lockedLink;
-
-        // Set the target time
-        const unlockTime = new Date(unlockDateString).getTime();
-
-        // Update the countdown every 1 second
-        const countdownInterval = setInterval(updateCountdown, 1000);
-
-        // Run once immediately to avoid 1-second delay
-        updateCountdown();
-
+        // --- Countdown Logic ---
         function updateCountdown() {
+            // Get the target unlock time
+            const unlockTime = new Date(unlockDateString).getTime();
+            // Get the current time
             const now = new Date().getTime();
+            
+            // Calculate the distance
             const distance = unlockTime - now;
 
             if (distance < 0) {
                 // Time is up!
-                clearInterval(countdownInterval);
+                clearInterval(countdownInterval); // Stop the timer
                 showUnlockedState();
-                return;
+            } else {
+                // Time is not up, calculate remaining time
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Update the HTML
+                daysEl.textContent = formatTime(days);
+                hoursEl.textContent = formatTime(hours);
+                minutesEl.textContent = formatTime(minutes);
+                secondsEl.textContent = formatTime(seconds);
             }
-
-            // Calculate time
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            // Display results (with leading zeros)
-            daysEl.textContent = String(days).padStart(2, '0');
-            hoursEl.textContent = String(hours).padStart(2, '0');
-            minutesEl.textContent = String(minutes).padStart(2, '0');
-            secondsEl.textContent = String(seconds).padStart(2, '0');
         }
 
+        // Function to show the unlocked state
         function showUnlockedState() {
-            // Hide locked state
-            lockedStateEl.classList.add('hidden');
-            
-            // Show unlocked state
-            unlockedStateEl.classList.remove('hidden');
-
-            // Change card color to green
-            mainCardEl.classList.remove('bg-gray-800');
-            mainCardEl.classList.add('bg-gray-800'); // Keep it consistent, or change if you want
-            
-            // Optional: You could add a subtle animation or color change
-            // e.g., mainCardEl.classList.add('border-2', 'border-green-500');
+            lockedState.classList.add('hidden');
+            unlockedState.classList.remove('hidden');
         }
+        
+        // Helper function to add a leading zero if number is less than 10
+        function formatTime(time) {
+            return time < 10 ? `0${time}` : time;
+        }
+
+        // --- Start the countdown ---
+        // Run once immediately to check
+        updateCountdown();
+        // Run every second
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        
     </script>
 
 </body>
