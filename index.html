@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Locked</title>
+    <!-- 1. Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 2. Load Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* 3. Apply Inter font as the default */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen text-white p-4">
+
+    <main class="bg-white text-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md">
+
+        <!-- ===== LOCKED STATE ===== -->
+        <!-- This section is visible by default and will be hidden when the timer runs out -->
+        <div id="locked-container">
+            <h1 class="text-3xl font-bold text-center text-indigo-600">
+                Content Locked
+            </h1>
+            <p class="text-center text-gray-600 mt-3 mb-6">
+                This link will automatically unlock in:
+            </p>
+
+            <!-- Countdown Timer -->
+            <div id="countdown" class="flex justify-center gap-4 text-center">
+                <!-- Days -->
+                <div>
+                    <span id="days" class="text-5xl font-black text-gray-800">00</span>
+                    <span class="block text-xs font-medium text-gray-500 uppercase tracking-widest">Days</span>
+                </div>
+                <span class="text-5xl font-black text-gray-300">:</span>
+                <!-- Hours -->
+                <div>
+                    <span id="hours" class="text-5xl font-black text-gray-800">00</span>
+                    <span class="block text-xs font-medium text-gray-500 uppercase tracking-widest">Hours</span>
+                </div>
+                <span class="text-5xl font-black text-gray-300">:</span>
+                <!-- Minutes -->
+                <div>
+                    <span id="minutes" class="text-5xl font-black text-gray-800">00</span>
+                    <span class="block text-xs font-medium text-gray-500 uppercase tracking-widest">Mins</span>
+                </div>
+                <span class="text-5xl font-black text-gray-300">:</span>
+                <!-- Seconds -->
+                <div>
+                    <span id="seconds" class="text-5xl font-black text-gray-800">00</span>
+                    <span class="block text-xs font-medium text-gray-500 uppercase tracking-widest">Secs</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== UNLOCKED STATE ===== -->
+        <!-- This section is hidden by default and becomes visible when the timer finishes -->
+        <div id="unlocked-container" class="hidden text-center">
+            <h1 class="text-3xl font-bold text-green-600">
+                Content Unlocked!
+            </h1>
+            <p class="text-center text-gray-600 mt-3 mb-8">
+                The link to the folder is now available.
+            </p>
+            
+            <!-- The Link Button -->
+            <a id="locked-link"
+               href="#" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="block w-full bg-green-600 text-white font-bold py-4 px-6 rounded-lg text-lg hover:bg-green-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                Go to Google Drive Folder
+            </a>
+        </div>
+
+    </main>
+
+    <script>
+        // --- CONFIGURATION ---
+
+        // 1. Set the Google Drive Link
+        const GOOGLE_DRIVE_LINK = 'https://drive.google.com/drive/folders/1-pmmEetn5XkiJqm-LkhOJezFom7slGK1';
+
+        // 2. Set the unlock date and time:
+        // Format: 'YYYY-MM-DDTHH:MM:SS' (ISO 8601)
+        // This format uses the user's local timezone.
+        // '2025-11-08T18:15:00' = November 8, 2025 at 6:15:00 PM
+        const UNLOCK_TIME_STRING = '2025-11-08T18:15:00';
+
+        // --- END CONFIGURATION ---
+
+        // Get the target time as a timestamp
+        const unlockTimestamp = new Date(UNLOCK_TIME_STRING).getTime();
+
+        // Get references to all the HTML elements we need to update
+        const lockedContainer = document.getElementById('locked-container');
+        const unlockedContainer = document.getElementById('unlocked-container');
+        const lockedLink = document.getElementById('locked-link');
+
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+
+        // Set the link's href attribute immediately
+        lockedLink.href = GOOGLE_DRIVE_LINK;
+
+        // This function runs every second to update the timer
+        function updateCountdown() {
+            // Get the current time
+            const now = new Date().getTime();
+
+            // Calculate the distance between now and the unlock time
+            const distance = unlockTimestamp - now;
+
+            // --- Time has run out ---
+            if (distance < 0) {
+                // Stop the interval
+                clearInterval(countdownInterval);
+                
+                // Hide the locked container
+                lockedContainer.classList.add('hidden');
+                
+                // Show the unlocked container
+                unlockedContainer.classList.remove('hidden');
+                
+                return; // Stop the function here
+            }
+
+            // --- Time is still counting down ---
+            
+            // Calculate days, hours, minutes, and seconds
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // A helper function to add a leading '0' if the number is less than 10
+            const pad = (num) => String(num).padStart(2, '0');
+
+            // Update the HTML with the new values
+            daysEl.textContent = pad(days);
+            hoursEl.textContent = pad(hours);
+            minutesEl.textContent = pad(minutes);
+            secondsEl.textContent = pad(seconds);
+        }
+
+        // Run the `updateCountdown` function every 1000 milliseconds (1 second)
+        const countdownInterval = setInterval(updateCountdown, 1000);
+
+        // Run the function once immediately on page load
+        // This prevents the timer from showing "00:00:00:00" for the first second
+        updateCountdown();
+
+    </script>
+</body>
+</html>
