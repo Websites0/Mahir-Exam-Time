@@ -85,20 +85,21 @@
         // --- CONFIGURATION ---
 
         // 1. Set the Google Drive Link
+        // Replace the placeholder link with your actual Google Drive folder link.
         const GOOGLE_DRIVE_LINK = 'https://drive.google.com/drive/folders/1-pmmEetn5XkiJqm-LkhOJezFom7slGK1';
 
         // 2. Set the unlock date and time:
-        // Format: 'YYYY-MM-DDTHH:MM:SS' (ISO 8601)
+        // The format is 'YYYY-MM-DDTHH:MM:SS' (ISO 8601).
         // This format uses the user's local timezone.
-        // '2025-11-08T18:15:00' = November 8, 2025 at 6:15:00 PM
+        // Example: '2025-11-08T18:15:00' corresponds to November 8, 2025, at 6:15:00 PM.
         const UNLOCK_TIME_STRING = '2025-11-08T18:15:00';
 
         // --- END CONFIGURATION ---
 
-        // Get the target time as a timestamp
+        // Get the target unlock time as a timestamp (milliseconds since epoch).
         const unlockTimestamp = new Date(UNLOCK_TIME_STRING).getTime();
 
-        // Get references to all the HTML elements we need to update
+        // Get references to all the HTML elements needed for dynamic updates.
         const lockedContainer = document.getElementById('locked-container');
         const unlockedContainer = document.getElementById('unlocked-container');
         const lockedLink = document.getElementById('locked-link');
@@ -108,54 +109,55 @@
         const minutesEl = document.getElementById('minutes');
         const secondsEl = document.getElementById('seconds');
 
-        // Set the link's href attribute immediately
+        // Set the link's href attribute immediately on page load.
         lockedLink.href = GOOGLE_DRIVE_LINK;
 
-        // This function runs every second to update the timer
+        // This function runs every second to update the countdown timer.
         function updateCountdown() {
-            // Get the current time
+            // Get the current time as a timestamp.
             const now = new Date().getTime();
 
-            // Calculate the distance between now and the unlock time
+            // Calculate the remaining time until the unlock timestamp.
             const distance = unlockTimestamp - now;
 
             // --- Time has run out ---
             if (distance < 0) {
-                // Stop the interval
+                // Stop the recurring timer.
                 clearInterval(countdownInterval);
                 
-                // Hide the locked container
+                // Hide the locked state container.
                 lockedContainer.classList.add('hidden');
                 
-                // Show the unlocked container
+                // Show the unlocked state container.
                 unlockedContainer.classList.remove('hidden');
                 
-                return; // Stop the function here
+                return; // Exit the function since the countdown is finished.
             }
 
             // --- Time is still counting down ---
             
-            // Calculate days, hours, minutes, and seconds
+            // Calculate the remaining days, hours, minutes, and seconds.
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // A helper function to add a leading '0' if the number is less than 10
+            // A helper function to add a leading zero if a number is less than 10.
             const pad = (num) => String(num).padStart(2, '0');
 
-            // Update the HTML with the new values
+            // Update the HTML elements with the calculated time values.
             daysEl.textContent = pad(days);
             hoursEl.textContent = pad(hours);
             minutesEl.textContent = pad(minutes);
             secondsEl.textContent = pad(seconds);
         }
 
-        // Run the `updateCountdown` function every 1000 milliseconds (1 second)
+        // Run the `updateCountdown` function every 1000 milliseconds (1 second).
         const countdownInterval = setInterval(updateCountdown, 1000);
 
-        // Run the function once immediately on page load
+        // Run the function once immediately on page load.
         // This prevents the timer from showing "00:00:00:00" for the first second
+        // before the interval starts.
         updateCountdown();
 
     </script>
