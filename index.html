@@ -3,220 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protected Google Drive Access</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Protected File</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Simple transition for showing/hiding elements */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-    <div class="w-full max-w-md">
-        <!-- Lock Icon and Title -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full shadow-lg mb-4">
-                <svg id="lockIcon" class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                </svg>
-                <svg id="unlockIcon" class="w-10 h-10 text-green-600 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
-                </svg>
-            </div>
-            <h1 class="text-3xl font-bold text-gray-800">Protected Google Drive</h1>
-            <p class="text-gray-600 mt-2">Enter password to access the drive folder</p>
-        </div>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
 
-        <!-- Password Form -->
-        <div id="passwordSection" class="bg-white rounded-lg shadow-xl p-6">
-            <form id="passwordForm" class="space-y-4">
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                        Password
-                    </label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-                        placeholder="Enter password"
-                        required
-                    >
-                </div>
-                <button
-                    type="submit"
-                    class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-200 font-medium"
-                >
-                    Unlock Access
-                </button>
-                <div id="errorMessage" class="hidden text-red-600 text-sm text-center bg-red-50 p-2 rounded">
-                    Incorrect password. Please try again.
-                </div>
-            </form>
-        </div>
-
-        <!-- Success Section (Hidden by default) -->
-        <div id="successSection" class="hidden bg-white rounded-lg shadow-xl p-6">
-            <div class="text-center mb-4">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-3">
-                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+    <div class="min-h-screen flex items-center justify-center p-4">
+        
+        <div class="w-full max-w-md">
+            
+            <!-- Lock Screen Section -->
+            <div id="lock-screen" class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl text-center">
+                <div class="mb-6">
+                    <!-- Lock Icon -->
+                    <svg class="w-16 h-16 text-indigo-600 dark:text-indigo-400 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 00-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                     </svg>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Access Granted!</h2>
-                <p class="text-gray-600 mb-4">You can now access the Google Drive folder</p>
-            </div>
-            
-            <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                <p class="text-sm text-gray-600 mb-2">Google Drive Link:</p>
-                <div class="flex items-center space-x-2">
-                    <input
-                        type="text"
-                        id="driveLink"
-                        value="https://drive.google.com/drive/folders/1CK36VnOz8CXUo4EeZSJhABtYSSttMHr_"
-                        readonly
-                        class="flex-1 px-3 py-2 bg-white border border-gray-300 rounded text-sm text-gray-700"
-                    >
-                    <button
-                        onclick="copyLink()"
-                        class="px-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded transition duration-200"
-                        title="Copy link"
-                    >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                        </svg>
+                <h1 class="text-2xl font-bold mb-2">Protected Resource</h1>
+                <p class="text-gray-600 dark:text-gray-400 mb-6">Please enter the password to unlock the content.</p>
+                
+                <div class="space-y-4">
+                    <input type="password" id="password-input" placeholder="Enter password" class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-center text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300" />
+                    
+                    <button id="unlock-button" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-300 transform hover:scale-105">
+                        Unlock
                     </button>
                 </div>
-                <div id="copyMessage" class="hidden text-green-600 text-sm mt-2">
-                    Link copied to clipboard!
-                </div>
+                
+                <p id="error-message" class="text-red-500 mt-4 h-6"></p>
             </div>
-            
-            <a
-                href="https://drive.google.com/drive/folders/1CK36VnOz8CXUo4EeZSJhABtYSSttMHr_"
-                target="_blank"
-                class="block w-full bg-blue-600 text-white text-center py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-200 font-medium"
-            >
-                Open Google Drive Folder
-                <svg class="inline-block w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                </svg>
-            </a>
-            
-            <button
-                onclick="lockAgain()"
-                class="w-full mt-3 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-200 font-medium"
-            >
-                Lock Again
-            </button>
+
+            <!-- Unlocked Content Section (Initially Hidden) -->
+            <div id="unlocked-content" class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl text-center fade-in" style="display: none;">
+                <div class="mb-6">
+                    <!-- Unlocked Icon -->
+                    <svg class="w-16 h-16 text-green-500 dark:text-green-400 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 00-9 0v3.75M10.5 10.5h1.5v3h-1.5v-3z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 12h13.5a2.25 2.25 0 012.25 2.25v6.75a2.25 2.25 0 01-2.25 2.25H5.25a2.25 2.25 0 01-2.25-2.25v-6.75a2.25 2.25 0 012.25-2.25z" />
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold mb-2">Access Granted!</h1>
+                <p class="text-gray-600 dark:text-gray-400 mb-6">Click the button below to access the Google Drive folder.</p>
+                
+                <a id="drive-link" href="https://drive.google.com/drive/folders/1u8utVosroUukRCtor5Gmu_SxaGtCs5qr" target="_blank" class="inline-block w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold text-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-300 transform hover:scale-105">
+                    Open Drive Folder
+                </a>
+            </div>
+
         </div>
+
     </div>
 
     <script>
-        // Correct password
-        const CORRECT_PASSWORD = '45971546';
-        
-        // Get elements
-        const passwordForm = document.getElementById('passwordForm');
-        const passwordInput = document.getElementById('password');
-        const passwordSection = document.getElementById('passwordSection');
-        const successSection = document.getElementById('successSection');
-        const errorMessage = document.getElementById('errorMessage');
-        const lockIcon = document.getElementById('lockIcon');
-        const unlockIcon = document.getElementById('unlockIcon');
-        
-        // Handle form submission
-        passwordForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
+        // --- JavaScript Logic ---
+
+        // 1. Get references to the HTML elements
+        const lockScreen = document.getElementById('lock-screen');
+        const unlockedContent = document.getElementById('unlocked-content');
+        const passwordInput = document.getElementById('password-input');
+        const unlockButton = document.getElementById('unlock-button');
+        const errorMessage = document.getElementById('error-message');
+        const driveLink = document.getElementById('drive-link');
+
+        // 2. Define the correct password and the link
+        const correctPassword = '45874487';
+        const googleDriveLink = 'https://drive.google.com/drive/folders/1u8utVosroUukRCtor5Gmu_SxaGtCs5qr';
+
+        // Set the link href from JavaScript (optional but good practice)
+        driveLink.href = googleDriveLink;
+
+        // 3. Create the function to check the password
+        function checkPassword() {
             const enteredPassword = passwordInput.value;
-            
-            if (enteredPassword === CORRECT_PASSWORD) {
-                // Password is correct
-                unlockAccess();
+
+            if (enteredPassword === correctPassword) {
+                // Correct password
+                errorMessage.textContent = '';
+                lockScreen.style.display = 'none';
+                unlockedContent.style.display = 'block';
             } else {
-                // Password is incorrect
-                showError();
+                // Incorrect password
+                errorMessage.textContent = 'Incorrect password. Please try again.';
+                // Add a little shake animation for effect
+                lockScreen.classList.add('animate-shake');
+                // Clear the input
+                passwordInput.value = '';
+                // Remove the shake animation after it finishes
+                setTimeout(() => {
+                    lockScreen.classList.remove('animate-shake');
+                }, 500);
+            }
+        }
+
+        // 4. Add event listeners
+        unlockButton.addEventListener('click', checkPassword);
+
+        // Also allow pressing 'Enter' to submit
+        passwordInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
             }
         });
-        
-        function unlockAccess() {
-            // Hide password section
-            passwordSection.classList.add('hidden');
-            
-            // Show success section
-            successSection.classList.remove('hidden');
-            
-            // Change lock icon to unlock
-            lockIcon.classList.add('hidden');
-            unlockIcon.classList.remove('hidden');
-            
-            // Clear password field
-            passwordInput.value = '';
-            
-            // Hide error message if shown
-            errorMessage.classList.add('hidden');
-        }
-        
-        function showError() {
-            errorMessage.classList.remove('hidden');
-            passwordInput.classList.add('border-red-500');
-            
-            // Shake animation
-            passwordInput.classList.add('animate-pulse');
-            setTimeout(() => {
-                passwordInput.classList.remove('animate-pulse');
-            }, 500);
-            
-            // Clear password field
-            passwordInput.value = '';
-            passwordInput.focus();
-        }
-        
-        function lockAgain() {
-            // Show password section
-            passwordSection.classList.remove('hidden');
-            
-            // Hide success section
-            successSection.classList.add('hidden');
-            
-            // Change unlock icon back to lock
-            unlockIcon.classList.add('hidden');
-            lockIcon.classList.remove('hidden');
-            
-            // Clear any error states
-            errorMessage.classList.add('hidden');
-            passwordInput.classList.remove('border-red-500');
-            
-            // Focus on password input
-            passwordInput.focus();
-        }
-        
-        function copyLink() {
-            const driveLink = document.getElementById('driveLink');
-            const copyMessage = document.getElementById('copyMessage');
-            
-            // Select the text
-            driveLink.select();
-            driveLink.setSelectionRange(0, 99999); // For mobile devices
-            
-            // Copy to clipboard
-            navigator.clipboard.writeText(driveLink.value).then(() => {
-                // Show success message
-                copyMessage.classList.remove('hidden');
-                
-                // Hide message after 3 seconds
-                setTimeout(() => {
-                    copyMessage.classList.add('hidden');
-                }, 3000);
-            });
-        }
-        
-        // Clear error message when user starts typing
-        passwordInput.addEventListener('input', function() {
-            errorMessage.classList.add('hidden');
-            passwordInput.classList.remove('border-red-500');
-        });
-        
-        // Focus on password input when page loads
-        window.addEventListener('load', function() {
-            passwordInput.focus();
-        });
+
+        // 5. Add utility classes for the shake animation (requires Tailwind config, so we add it manually)
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+                20%, 40%, 60%, 80% { transform: translateX(10px); }
+            }
+            .animate-shake {
+                animation: shake 0.5s ease-in-out;
+            }
+        `;
+        document.head.appendChild(style);
+
     </script>
+
 </body>
 </html>
