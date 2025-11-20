@@ -3,334 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Access Portal</title>
-    <!-- Tailwind CSS -->
+    <title>Secure Link Access</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Custom Animations */
-        @keyframes blob {
-            0% { transform: translate(0px, 0px) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-            100% { transform: translate(0px, 0px) scale(1); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            height: 100vh;
+            overflow: hidden;
         }
-        .animate-blob {
-            animation: blob 7s infinite;
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
-        .animation-delay-2000 {
-            animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-            animation-delay: 4s;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
-            20%, 40%, 60%, 80% { transform: translateX(4px); }
-        }
+
+        /* Shake Animation for wrong password */
         .shake {
             animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
         }
+
         .fade-in {
-            animation: fadeIn 0.5s ease-out forwards;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="min-h-screen bg-slate-900 flex items-center justify-center p-4 font-sans selection:bg-indigo-500 selection:text-white text-slate-200 overflow-hidden">
+<body class="flex items-center justify-center text-slate-200 relative">
 
-    <!-- Background Decoration -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-black opacity-80"></div>
-        <div class="absolute -top-24 -left-24 w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div class="absolute top-0 -right-4 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+    <!-- Decorative Background Elements -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div class="absolute top-1/3 right-1/4 w-64 h-64 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
     </div>
 
-    <div class="relative z-10 w-full max-w-md">
+    <div class="w-full max-w-md p-6 mx-4">
         
-        <!-- Header / Logo Area -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/30 mb-4">
-                <!-- Shield Check Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
-            </div>
-            <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">
-                Secure Access Portal
-            </h1>
-            <p id="status-text" class="text-slate-400 mt-2 text-sm md:text-base">
-                Enter your credentials to access the resource
-            </p>
-        </div>
-
-        <!-- Main Card -->
-        <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700 rounded-3xl shadow-2xl overflow-hidden transition-all duration-300">
-            
-            <!-- View 1: Login Form -->
-            <div id="login-view" class="p-8">
-                <form id="login-form" class="space-y-6">
-                    <div>
-                        <label class="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2 ml-1">
-                            Access Password
-                        </label>
-                        <div class="relative group">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <!-- Lock Icon -->
-                                <svg id="lock-icon" class="w-5 h-5 text-slate-500 transition-colors duration-300 group-focus-within:text-indigo-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                            </div>
-                            <input
-                                type="password"
-                                id="password-input"
-                                class="w-full bg-slate-900/50 text-white pl-12 pr-4 py-3.5 rounded-xl border border-slate-700 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 hover:border-slate-600 transition-all duration-300 outline-none placeholder-slate-600"
-                                placeholder="••••••••"
-                                autofocus
-                            >
-                        </div>
-                        <!-- Error Message -->
-                        <div id="error-msg" class="hidden flex items-center mt-3 text-red-400 text-sm animate-pulse">
-                            <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
-                            Incorrect password. Please try again.
-                        </div>
-                    </div>
-
-                    <button
-                        type="submit"
-                        id="submit-btn"
-                        class="w-full group relative overflow-hidden rounded-xl py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transform hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
-                    >
-                        <span id="btn-text" class="relative z-10 flex items-center justify-center font-semibold">
-                            Unlock Access 
-                            <svg class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                        </span>
-                        <!-- Loader (Hidden by default) -->
-                        <span id="btn-loader" class="hidden flex items-center justify-center">
-                            <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            Verifying...
-                        </span>
-                    </button>
-                </form>
-            </div>
-
-            <!-- View 2: Success / Unlocked (Hidden initially) -->
-            <div id="success-view" class="hidden p-8">
-                <div class="flex flex-col items-center text-center fade-in">
-                    <div class="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mb-6">
-                        <!-- Unlock Icon -->
-                        <svg class="w-8 h-8 text-green-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
-                    </div>
-                    
-                    <h2 class="text-xl font-bold text-white mb-2">Access Granted</h2>
-                    <p class="text-slate-400 text-sm mb-8 max-w-[260px]">
-                        The drive folder has been unlocked. You can now access the files.
-                    </p>
-
-                    <a 
-                        href="#" 
-                        id="drive-link-btn"
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        class="w-full group flex items-center justify-center bg-white text-slate-900 font-bold py-4 px-6 rounded-xl shadow-xl shadow-white/10 hover:bg-indigo-50 transition-all duration-300 transform hover:-translate-y-1 mb-4"
-                    >
-                        <svg class="w-5 h-5 mr-2 text-indigo-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
-                        Open Google Drive
-                    </a>
-
-                    <button
-                        id="copy-btn"
-                        class="w-full flex items-center justify-center bg-slate-900/50 border border-slate-700 text-slate-300 font-medium py-3 px-6 rounded-xl hover:bg-slate-800 hover:text-white transition-colors duration-300"
-                    >
-                        <span id="copy-icon-container" class="flex items-center">
-                            <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-                            Copy Link
-                        </span>
-                        <span id="copied-icon-container" class="hidden flex items-center text-green-400">
-                            <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                            Link Copied!
-                        </span>
-                    </button>
-
-                    <div class="mt-8 pt-6 border-t border-slate-700/50 w-full">
-                        <button 
-                            id="reset-btn"
-                            class="text-xs text-slate-500 hover:text-slate-400 transition-colors"
-                        >
-                            Lock session
-                        </button>
-                    </div>
+        <!-- LOGIN SECTION -->
+        <div id="login-section" class="glass-card rounded-2xl p-8 text-center transition-all duration-300">
+            <div class="mb-6 flex justify-center">
+                <div class="p-4 bg-white/10 rounded-full">
+                    <i data-lucide="lock" class="w-8 h-8 text-indigo-400"></i>
                 </div>
             </div>
+            
+            <h1 class="text-2xl font-bold mb-2 text-white">Restricted Access</h1>
+            <p class="text-slate-400 mb-8 text-sm">Please enter the access code to view the drive folder.</p>
 
+            <div class="relative mb-4">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i data-lucide="key" class="w-5 h-5 text-slate-500"></i>
+                </div>
+                <input 
+                    type="password" 
+                    id="passwordInput" 
+                    class="w-full bg-slate-900/50 border border-slate-600 text-white text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block pl-10 p-3 placeholder-slate-500 transition-all" 
+                    placeholder="Enter Password"
+                >
+                <button onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer hover:text-white text-slate-500">
+                    <i data-lucide="eye" id="eyeIcon" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <p id="errorMessage" class="text-red-400 text-xs min-h-[1rem] mb-4 opacity-0 transition-opacity font-medium">Incorrect password. Try again.</p>
+
+            <button 
+                onclick="checkPassword()" 
+                class="w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-800 font-medium rounded-lg text-sm px-5 py-3 text-center transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-500/30"
+            >
+                Unlock Access
+            </button>
         </div>
 
-        <!-- Footer -->
-        <div class="text-center mt-8">
-            <p class="text-xs text-slate-600">
-                &copy; 2025 Secure Share. Protected by End-to-End Encryption.
-            </p>
+        <!-- SUCCESS SECTION (Hidden initially) -->
+        <div id="success-section" class="hidden glass-card rounded-2xl p-8 text-center fade-in">
+            <div class="mb-6 flex justify-center">
+                <div class="p-4 bg-green-500/20 rounded-full">
+                    <i data-lucide="unlock" class="w-10 h-10 text-green-400"></i>
+                </div>
+            </div>
+            
+            <h1 class="text-2xl font-bold mb-2 text-white">Access Granted</h1>
+            <p class="text-slate-400 mb-8 text-sm">You can now access the Google Drive folder.</p>
+
+            <a 
+                href="https://drive.google.com/drive/folders/129GYtKVe9o2imB998Z0kD_yqDPFWvMVZ" 
+                target="_blank"
+                class="group flex items-center justify-center gap-2 w-full text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-4 text-center transition-all shadow-lg shadow-green-500/30 transform hover:-translate-y-1"
+            >
+                <span>Open Google Drive</span>
+                <i data-lucide="external-link" class="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"></i>
+            </a>
+            
+            <button onclick="lockAgain()" class="mt-6 text-slate-500 text-sm hover:text-slate-300 underline underline-offset-4">
+                Lock Access
+            </button>
         </div>
 
     </div>
 
     <script>
-        // --- Configuration ---
-        const CONFIG = {
-            PASSWORD: "55972526",
-            LINK: "https://drive.google.com/drive/folders/1rlWVzuEaLo0dtSlwBDWKh2Dlv-0C_Ftj"
-        };
+        // Initialize Icons
+        lucide.createIcons();
 
-        // --- DOM Elements ---
-        const elements = {
-            loginView: document.getElementById('login-view'),
-            successView: document.getElementById('success-view'),
-            statusText: document.getElementById('status-text'),
-            form: document.getElementById('login-form'),
-            passwordInput: document.getElementById('password-input'),
-            submitBtn: document.getElementById('submit-btn'),
-            btnText: document.getElementById('btn-text'),
-            btnLoader: document.getElementById('btn-loader'),
-            errorMsg: document.getElementById('error-msg'),
-            lockIcon: document.getElementById('lock-icon'),
-            driveLinkBtn: document.getElementById('drive-link-btn'),
-            copyBtn: document.getElementById('copy-btn'),
-            copyIcon: document.getElementById('copy-icon-container'),
-            copiedIcon: document.getElementById('copied-icon-container'),
-            resetBtn: document.getElementById('reset-btn')
-        };
+        // Configuration
+        const CORRECT_PASS = "74326536";
+        const TARGET_URL = "https://drive.google.com/drive/folders/129GYtKVe9o2imB998Z0kD_yqDPFWvMVZ";
 
-        // Set the href for the drive link immediately
-        elements.driveLinkBtn.href = CONFIG.LINK;
+        // DOM Elements
+        const loginSection = document.getElementById('login-section');
+        const successSection = document.getElementById('success-section');
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMessage = document.getElementById('errorMessage');
+        const eyeIcon = document.getElementById('eyeIcon');
 
-        // --- Event Listeners ---
+        // Function to check password
+        function checkPassword() {
+            const userValue = passwordInput.value;
 
-        elements.form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleLogin();
-        });
-
-        elements.copyBtn.addEventListener('click', handleCopy);
-        elements.resetBtn.addEventListener('click', handleReset);
-
-        // Make input reset error state on typing
-        elements.passwordInput.addEventListener('input', function() {
-            if (!elements.errorMsg.classList.contains('hidden')) {
-                hideError();
-            }
-        });
-
-        // --- Functions ---
-
-        function handleLogin() {
-            const inputVal = elements.passwordInput.value;
-            if (!inputVal) return;
-
-            // 1. Show Loading State
-            setLoading(true);
-
-            // 2. Simulate Network Delay (600ms)
-            setTimeout(() => {
-                setLoading(false);
-
-                if (inputVal === CONFIG.PASSWORD) {
-                    // Success
-                    showSuccessView();
-                } else {
-                    // Failure
-                    showError();
-                }
-            }, 600);
-        }
-
-        function setLoading(isLoading) {
-            elements.submitBtn.disabled = isLoading;
-            if (isLoading) {
-                elements.btnText.classList.add('hidden');
-                elements.btnLoader.classList.remove('hidden');
+            if (userValue === CORRECT_PASS) {
+                // Success Logic
+                errorMessage.classList.add('opacity-0');
+                loginSection.style.display = 'none';
+                successSection.classList.remove('hidden');
+                successSection.style.display = 'block';
             } else {
-                elements.btnText.classList.remove('hidden');
-                elements.btnLoader.classList.add('hidden');
+                // Failure Logic
+                errorMessage.classList.remove('opacity-0');
+                loginSection.classList.add('shake');
+                passwordInput.classList.add('border-red-500', 'focus:ring-red-500');
+                passwordInput.classList.remove('border-slate-600', 'focus:ring-indigo-500');
+
+                // Remove shake class after animation checks
+                setTimeout(() => {
+                    loginSection.classList.remove('shake');
+                }, 500);
             }
         }
 
-        function showSuccessView() {
-            elements.loginView.classList.add('hidden');
-            elements.successView.classList.remove('hidden');
-            elements.statusText.textContent = "Identity verified successfully";
-            // Add animation class to trigger fade-in
-            elements.successView.querySelector('.fade-in').style.animation = 'none';
-            elements.successView.querySelector('.fade-in').offsetHeight; /* trigger reflow */
-            elements.successView.querySelector('.fade-in').style.animation = null; 
-        }
-
-        function showError() {
-            elements.errorMsg.classList.remove('hidden');
-            elements.lockIcon.classList.remove('text-slate-500', 'group-focus-within:text-indigo-400');
-            elements.lockIcon.classList.add('text-red-400');
-            elements.passwordInput.classList.add('border-red-500/50', 'focus:border-red-500', 'focus:ring-red-500/10');
-            elements.passwordInput.classList.remove('border-slate-700', 'focus:border-indigo-500', 'focus:ring-indigo-500/10');
+        // Toggle Password Visibility
+        function togglePasswordVisibility() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
             
-            // Shake Animation
-            elements.form.classList.add('shake');
-            setTimeout(() => {
-                elements.form.classList.remove('shake');
-            }, 500);
-        }
-
-        function hideError() {
-            elements.errorMsg.classList.add('hidden');
-            elements.lockIcon.classList.add('text-slate-500', 'group-focus-within:text-indigo-400');
-            elements.lockIcon.classList.remove('text-red-400');
-            elements.passwordInput.classList.remove('border-red-500/50', 'focus:border-red-500', 'focus:ring-red-500/10');
-            elements.passwordInput.classList.add('border-slate-700', 'focus:border-indigo-500', 'focus:ring-indigo-500/10');
-        }
-
-        function handleCopy() {
-            // Fallback for copying text
-            const textArea = document.createElement("textarea");
-            textArea.value = CONFIG.LINK;
-            
-            // Ensure it's not visible but part of DOM
-            textArea.style.position = "fixed";
-            textArea.style.left = "-9999px";
-            textArea.style.top = "0";
-            document.body.appendChild(textArea);
-            
-            textArea.focus();
-            textArea.select();
-            
-            try {
-                document.execCommand('copy');
-                showCopiedState();
-            } catch (err) {
-                console.error('Fallback: Oops, unable to copy', err);
+            // Toggle Icon
+            if(type === 'text') {
+                eyeIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                eyeIcon.setAttribute('data-lucide', 'eye');
             }
-            
-            document.body.removeChild(textArea);
+            lucide.createIcons();
         }
 
-        function showCopiedState() {
-            elements.copyIcon.classList.add('hidden');
-            elements.copiedIcon.classList.remove('hidden');
-            
-            setTimeout(() => {
-                elements.copyIcon.classList.remove('hidden');
-                elements.copiedIcon.classList.add('hidden');
-            }, 2000);
-        }
+        // Allow "Enter" key to submit
+        passwordInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
 
-        function handleReset() {
-            elements.passwordInput.value = '';
-            elements.statusText.textContent = "Enter your credentials to access the resource";
-            elements.successView.classList.add('hidden');
-            elements.loginView.classList.remove('hidden');
-            hideError();
+        // Reset input style on typing
+        passwordInput.addEventListener('input', function() {
+            if (!errorMessage.classList.contains('opacity-0')) {
+                errorMessage.classList.add('opacity-0');
+                passwordInput.classList.remove('border-red-500', 'focus:ring-red-500');
+                passwordInput.classList.add('border-slate-600', 'focus:ring-indigo-500');
+            }
+        });
+
+        // Lock functionality for demo purposes
+        function lockAgain() {
+            passwordInput.value = '';
+            successSection.style.display = 'none';
+            loginSection.style.display = 'block';
+            // Re-init icons just in case
+            lucide.createIcons();
         }
     </script>
 </body>
