@@ -1,263 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Password-Protected Drive Link</title>
-  <style>
-    :root {
-      color-scheme: light dark;
-      --bg: #0f172a;
-      --panel: #1d2a44;
-      --accent: #38bdf8;
-      --accent-dark: #0ea5e9;
-      --text: #e2e8f0;
-      --muted: #94a3b8;
-      --error: #f87171;
-      font-size: 18px;
-    }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    body {
-      background: radial-gradient(circle at top, rgba(56,189,248,0.15), transparent 55%), var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-    .card {
-      background: rgba(15,23,42,0.85);
-      border: 1px solid rgba(148,163,184,0.2);
-      border-radius: 28px;
-      padding: clamp(1.8rem, 4vw, 3.5rem);
-      max-width: 460px;
-      width: 100%;
-      box-shadow: 0 30px 60px rgba(15,23,42,0.6);
-      backdrop-filter: blur(12px);
-    }
-    h1 {
-      font-size: clamp(1.6rem, 4vw, 2.3rem);
-      margin-bottom: 0.75rem;
-    }
-    p {
-      color: var(--muted);
-      margin-bottom: 1.5rem;
-      line-height: 1.6;
-    }
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-    input {
-      width: 100%;
-      padding: 0.9rem 1rem;
-      border-radius: 14px;
-      border: 1px solid rgba(148,163,184,0.4);
-      background: rgba(15,23,42,0.6);
-      color: var(--text);
-      font-size: 1rem;
-      transition: border 0.2s ease;
-    }
-    input:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-    button {
-      margin-top: 1rem;
-      width: 100%;
-      padding: 0.95rem 1rem;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-      color: var(--bg);
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-    button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 15px 30px rgba(14,165,233,0.35);
-    }
-    .link-panel {
-      margin-top: 1.5rem;
-      padding: 1rem 1.2rem;
-      border-radius: 18px;
-      border: 1px dashed rgba(56,189,248,0.5);
-      background: rgba(56,189,248,0.07);
-      display: none;
-    }
-    .drive-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-weight: 600;
-      color: var(--accent);
-      text-decoration: none;
-      word-break: break-all;
-    }
-    .error {
-      margin-top: 0.8rem;
-      color: var(--error);
-      font-weight: 600;
-      min-height: 1.2em;
-    }
-    @media (max-width: 520px) {
-      body { padding: 1.5rem; }
-      .card { padding: 1.8rem; border-radius: 22px; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protected Link Access</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom animation for shake effect */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+            20%, 40%, 60%, 80% { transform: translateX(4px); }
+        }
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        
+        /* Smooth fade transition */
+        .fade-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 300ms, transform 300ms;
+        }
+        
+        /* Background gradient animation */
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animate-gradient {
+            background-size: 200% 200%;
+            animation: gradient 15s ease infinite;
+        }
+    </style>
 </head>
-<body>
-  <main class="card">
-    <header>
-      <h1>Unlock Drive Access</h1>
-      <p>Enter the passcode to reveal the Google Drive folder. Keep it secret, keep it safe.</p>
-    </header>
-    <section>
-      <label for="password">Passcode</label>
-      <input type="password" id="password" placeholder="Enter passcode" autocomplete="off" />
-      <button id="unlockBtn">Unlock</button>
-      <div class="error" id="errorMsg"></div>
-    </section>
-    <section class="link-panel" id="linkPanel">
-      <p>Access granted! Click below:</p>
-      <a class="drive-link" href="https://drive.google.com/drive/folders/1krh2qfE0FLq08tdLBf1YCGqEo1XjGI8Q" target="_blank" rel="noopener">
-        🔗 Google Drive Folder
-      </a>
-    </section>
-  </main>
+<body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 animate-gradient min-h-screen flex items-center justify-center p-4 font-sans text-slate-100">
 
-  <script>
-    (function () {
-      const PASSWORD = "5543997";
-      const input = document.getElementById("password");
-      const button = document.getElementById("unlockBtn");
-      const errorMsg = document.getElementById("errorMsg");
-      const linkPanel = document.getElementById("linkPanel");
+    <!-- Main Card Container -->
+    <div class="w-full max-w-md bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl overflow-hidden relative">
+        
+        <!-- LOCK SCREEN -->
+        <div id="lock-screen" class="p-8 flex flex-col items-center transition-all duration-300">
+            <div class="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mb-6 text-blue-400">
+                <i data-lucide="lock" class="w-8 h-8"></i>
+            </div>
+            
+            <h1 class="text-2xl font-bold mb-2 text-center">Restricted Access</h1>
+            <p class="text-slate-400 text-center mb-8 text-sm">Please enter the security PIN to view the shared content.</p>
+            
+            <form id="login-form" class="w-full space-y-4" onsubmit="handleLogin(event)">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                        <i data-lucide="key-round" class="w-4 h-4"></i>
+                    </div>
+                    <input 
+                        type="password" 
+                        id="password-input" 
+                        placeholder="Enter Password" 
+                        class="w-full bg-slate-900/50 border border-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-lg py-3 pl-10 pr-4 text-slate-200 placeholder-slate-500 outline-none transition-all"
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <button 
+                    type="submit" 
+                    class="w-full bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-medium py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20 group"
+                >
+                    <span>Unlock Content</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1"></i>
+                </button>
+            </form>
 
-      const unlock = () => {
-        const attempt = input.value.trim();
-        if (attempt === PASSWORD) {
-          linkPanel.style.display = "block";
-          errorMsg.textContent = "";
-          input.value = "";
-        } else {
-          linkPanel.style.display = "none";
-          errorMsg.textContent = "Incorrect passcode. Try again?";
-        }
-      };
+            <p id="error-msg" class="mt-4 text-red-400 text-sm font-medium hidden flex items-center gap-2">
+                <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                Incorrect password. Please try again.
+            </p>
+        </div>
 
-      button.addEventListener("click", unlock);
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          unlock();
-        }
-      });
-    })();
-  </script>
-</body>
-</html>
+        <!-- CONTENT SCREEN (Initially Hidden) -->
+        <div id="content-screen" class="hidden p-8 flex flex-col items-center text-center">
+            <div class="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mb-6 text-emerald-400 animate-[bounce_1s_ease-in-out_1]">
+                <i data-lucide="folder-open" class="w-8 h-8"></i>
+            </div>
+            
+            <h2 class="text-2xl font-bold mb-2 text-white">Access Granted</h2>
+            <p class="text-slate-400 mb-8 text-sm">The secure link is now available.</p>
+            
+            <div class="w-full p-4 bg-slate-900/50 rounded-xl border border-slate-700 mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <i data-lucide="hard-drive" class="w-5 h-5 text-blue-400"></i>
+                    <span class="text-sm font-medium text-slate-300">Google Drive Folder</span>
+                </div>
+                <div class="text-xs text-slate-500 truncate text-left bg-slate-950 p-2 rounded border border-slate-800 font-mono">
+                    drive.google.com/drive/folders/1krh2q...
+                </div>
+            </div>
+
             <a 
-                href="https://drive.google.com/drive/folders/129GYtKVe9o2imB998Z0kD_yqDPFWvMVZ" 
+                href="https://drive.google.com/drive/folders/1krh2qfE0FLq08tdLBf1YCGqEo1XjGI8Q" 
                 target="_blank"
-                class="group flex items-center justify-center gap-2 w-full text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-4 text-center transition-all shadow-lg shadow-green-500/30 transform hover:-translate-y-1"
+                class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/20 mb-3"
             >
                 <span>Open Google Drive</span>
-                <i data-lucide="external-link" class="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"></i>
+                <i data-lucide="external-link" class="w-4 h-4"></i>
             </a>
             
-            <button onclick="lockAgain()" class="mt-6 text-slate-500 text-sm hover:text-slate-300 underline underline-offset-4">
-                Lock Access
+            <button onclick="location.reload()" class="text-slate-500 hover:text-slate-300 text-sm py-2 transition-colors">
+                Lock again
             </button>
         </div>
 
+    </div>
+
+    <div class="fixed bottom-4 text-slate-600 text-xs">
+        Secure Link Protection
     </div>
 
     <script>
         // Initialize Icons
         lucide.createIcons();
 
-        // Configuration
-        const CORRECT_PASS = "74326536";
-        const TARGET_URL = "https://drive.google.com/drive/folders/129GYtKVe9o2imB998Z0kD_yqDPFWvMVZ";
+        const CORRECT_PASS = "5543997";
+        const loginForm = document.getElementById('login-form');
+        const passInput = document.getElementById('password-input');
+        const errorMsg = document.getElementById('error-msg');
+        const lockScreen = document.getElementById('lock-screen');
+        const contentScreen = document.getElementById('content-screen');
 
-        // DOM Elements
-        const loginSection = document.getElementById('login-section');
-        const successSection = document.getElementById('success-section');
-        const passwordInput = document.getElementById('passwordInput');
-        const errorMessage = document.getElementById('errorMessage');
-        const eyeIcon = document.getElementById('eyeIcon');
+        function handleLogin(e) {
+            e.preventDefault();
+            const inputVal = passInput.value;
 
-        // Function to check password
-        function checkPassword() {
-            const userValue = passwordInput.value;
-
-            if (userValue === CORRECT_PASS) {
+            if (inputVal === CORRECT_PASS) {
                 // Success Logic
-                errorMessage.classList.add('opacity-0');
-                loginSection.style.display = 'none';
-                successSection.classList.remove('hidden');
-                successSection.style.display = 'block';
+                unlockSuccess();
             } else {
-                // Failure Logic
-                errorMessage.classList.remove('opacity-0');
-                loginSection.classList.add('shake');
-                passwordInput.classList.add('border-red-500', 'focus:ring-red-500');
-                passwordInput.classList.remove('border-slate-600', 'focus:ring-indigo-500');
-
-                // Remove shake class after animation checks
-                setTimeout(() => {
-                    loginSection.classList.remove('shake');
-                }, 500);
+                // Error Logic
+                showError();
             }
         }
 
-        // Toggle Password Visibility
-        function togglePasswordVisibility() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
+        function showError() {
+            // Add shake animation class
+            passInput.classList.add('shake');
+            passInput.classList.add('border-red-500');
+            passInput.classList.add('focus:border-red-500');
+            passInput.classList.add('focus:ring-red-500');
+            passInput.classList.remove('focus:border-blue-500');
+            passInput.classList.remove('focus:ring-blue-500');
             
-            // Toggle Icon
-            if(type === 'text') {
-                eyeIcon.setAttribute('data-lucide', 'eye-off');
-            } else {
-                eyeIcon.setAttribute('data-lucide', 'eye');
-            }
-            lucide.createIcons();
+            // Show error message
+            errorMsg.classList.remove('hidden');
+            
+            // Clear input
+            passInput.value = '';
+            passInput.focus();
+
+            // Remove animation class after it plays so it can be triggered again
+            setTimeout(() => {
+                passInput.classList.remove('shake');
+            }, 500);
         }
 
-        // Allow "Enter" key to submit
-        passwordInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                checkPassword();
-            }
-        });
+        function unlockSuccess() {
+            // Hide error if visible
+            errorMsg.classList.add('hidden');
 
-        // Reset input style on typing
-        passwordInput.addEventListener('input', function() {
-            if (!errorMessage.classList.contains('opacity-0')) {
-                errorMessage.classList.add('opacity-0');
-                passwordInput.classList.remove('border-red-500', 'focus:ring-red-500');
-                passwordInput.classList.add('border-slate-600', 'focus:ring-indigo-500');
-            }
-        });
-
-        // Lock functionality for demo purposes
-        function lockAgain() {
-            passwordInput.value = '';
-            successSection.style.display = 'none';
-            loginSection.style.display = 'block';
-            // Re-init icons just in case
-            lucide.createIcons();
+            // Transition UI
+            lockScreen.style.opacity = '0';
+            lockScreen.style.transform = 'scale(0.95)';
+            
+            setTimeout(() => {
+                lockScreen.classList.add('hidden');
+                contentScreen.classList.remove('hidden');
+                
+                // Trigger simple animation for content entrance
+                // Note: We toggle classes slightly after removing hidden to trigger transitions if CSS transitions were applied, 
+                // but here we rely on the fade-enter logic.
+                contentScreen.classList.add('fade-enter');
+                
+                requestAnimationFrame(() => {
+                    contentScreen.classList.add('fade-enter-active');
+                    contentScreen.classList.remove('fade-enter');
+                });
+                
+                // Re-initialize icons for the new view (sometimes needed for dynamic content)
+                lucide.createIcons();
+            }, 200);
         }
+
+        // Reset error state on input
+        passInput.addEventListener('input', () => {
+            if (!errorMsg.classList.contains('hidden')) {
+                errorMsg.classList.add('hidden');
+                passInput.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+                passInput.classList.add('focus:border-blue-500', 'focus:ring-blue-500');
+            }
+        });
     </script>
 </body>
 </html>
